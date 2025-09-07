@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>リンク紹介サイト（シンプル）</title>
+  <meta name="description" content="シンプルなリンク集（検索・カテゴリ・追加・エクスポート）" />
+  <style>
+    :root{--bg:#0f1724;--card:#0b1220;--muted:#9aa4b2;--accent:#38bdf8;--glass:rgba(255,255,255,0.04)}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,'Hiragino Kaku Gothic ProN',Meiryo,Arial;color:#e6eef6;background:linear-gradient(180deg,#071026 0%, #07192a 100%);padding:28px}
+    header{display:flex;align-items:center;gap:16px;margin-bottom:20px}
+    h1{font-size:20px;margin:0}
+    p.lead{margin:0;color:var(--muted);font-size:13px}
+    .controls{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+    .btn{background:var(--accent);color:#022;border:0;padding:8px 12px;border-radius:10px;cursor:pointer;font-weight:600}
+    .btn.secondary{background:transparent;color:var(--accent);border:1px solid rgba(56,189,248,0.12)}
+    .search{flex:1;min-width:200px}
+    input[type="search"], input[type="text"], select{width:100%;padding:8px 10px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:var(--card);color:inherit}
+    main{display:grid;grid-template-columns:1fr;gap:18px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+    .card{background:var(--card);padding:12px;border-radius:12px;box-shadow:0 6px 18px rgba(2,6,23,0.6);border:1px solid var(--glass);display:flex;flex-direction:column;gap:8px}
+    .card h3{margin:0;font-size:15px}
+    .meta{font-size:12px;color:var(--muted)}
+    .tags{display:flex;gap:8px;flex-wrap:wrap}
+    .tag{font-size:12px;padding:4px 8px;border-radius:999px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.02)}
+    .card-actions{margin-top:auto;display:flex;gap:8px}
+    .small{font-size:13px;padding:7px 10px;border-radius:8px}
+    footer{margin-top:22px;color:var(--muted);font-size:13px}
+    .toolbar{display:flex;gap:8px;align-items:center}
+    .modal{position:fixed;inset:0;background:rgba(2,6,23,0.6);display:flex;align-items:center;justify-content:center;z-index:40}
+    .modal-card{width:100%;max-width:640px;background:linear-gradient(180deg,#071526,#04102a);padding:18px;border-radius:12px;border:1px solid rgba(255,255,255,0.03)}
+    label{display:block;font-size:13px;margin-bottom:6px}
+    .row{display:grid;grid-template-columns:1fr 140px;gap:8px}
+    pre{white-space:pre-wrap;font-size:12px;color:var(--muted)}
+    .empty{padding:28px;border-radius:12px;border:1px dashed rgba(255,255,255,0.03);text-align:center;color:var(--muted)}
+    @media (max-width:720px){.row{grid-template-columns:1fr}header{flex-direction:column;align-items:flex-start}}
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>リンク紹介サイト（シンプル）</h1>
+      <p class="lead">検索・カテゴリ・追加・エクスポート機能つき。HTML一ファイルで動きます。</p>
+      <div class="controls">
+        <input id="searchInput" class="search" type="search" placeholder="検索ワード、URL、説明、タグで検索...">
+        <select id="filterCategory"><option value="">全カテゴリ</option></select>
+        <button id="addBtn" class="btn">リンクを追加</button>
+        <button id="exportBtn" class="btn secondary">エクスポート</button>
+        <button id="importBtn" class="btn secondary">インポート</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="listSection">
+      <div id="grid" class="grid"></div>
+      <div id="empty" class="empty" style="display:none">まだリンクがありません。右上の「リンクを追加」から追加してください。</div>
+    </section>
+
+    <footer>
+      <div class="toolbar">
+        <div>データはブラウザの <strong>localStorage</strong> に保存されます。<span id="count"></span></div>
+      </div>
+    </footer>
+  </main>
+
+  <!-- モーダル（追加/編集） -->
+  <div id="modal" class="modal" style="display:none">
+    <div class="modal-card">
+      <h2 id="modalTitle">リンクを追加</h2>
+      <form id="linkForm">
+        <div style="display:grid;gap:8px">
+          <div>
+            <label>タイトル</label>
+            <input id="title" type="text" required>
+          </div>
+          <div>
+            <label>URL</label>
+            <input id="url" type="text" placeholder="https://example.com" required>
+          </div>
+          <div>
+            <label>説明</label>
+            <input id="desc" type="text" placeholder="概要（任意）">
+          </div>
+          <div>
+            <label>タグ（カンマ区切り）</label>
+            <input id="tags" type="text" placeholder="例: 技術, ニュース">
+          </div>
+          <div class="row">
+            <div>
+              <label>カテゴリ</label>
+              <input id="category" type="text" placeholder="カテゴリー名（例: 技術）">
+            </div>
+            <div>
+              <label>優先度</label>
+              <select id="priority">
+                <option value="0">普通</option>
+                <option value="1">高</option>
+                <option value="-1">低</option>
+              </select>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px">
+            <button type="button" id="cancel" class="btn secondary small">キャンセル</button>
+            <button type="submit" class="btn small">保存</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <input id="fileInput" type="file" accept="application/json" style="display:none">
+
+  <script>
+    // シンプルなリンク管理アプリ（localStorageに保存）
+    const STORAGE_KEY = 'simple_links_v1';
+
+    // サンプルデータ（初回のみ）
+    const defaultLinks = [
+      {id: genId(), title:'MDN Web Docs', url:'https://developer.mozilla.org/ja/', desc:'Web 開発のリファレンス', tags:['技術','リファレンス'], category:'技術', priority:1, created:Date.now()},
+      {id: genId(), title:'はてなブックマーク', url:'https://b.hatena.ne.jp/', desc:'日本のブックマークサービス', tags:['ニュース','コミュニティ'], category:'ニュース', priority:0, created:Date.now()},
+      {id: genId(), title:'YouTube', url:'https://youtube.com/', desc:'動画プラットフォーム', tags:['動画','エンタメ'], category:'動画', priority:0, created:Date.now()}
+    ];
+
+    // state
+    let links = loadLinks();
+
+    // elements
+    const grid = document.getElementById('grid');
+    const empty = document.getElementById('empty');
+    const count = document.getElementById('count');
+    const searchInput = document.getElementById('searchInput');
+    const filterCategory = document.getElementById('filterCategory');
+    const addBtn = document.getElementById('addBtn');
+    const modal = document.getElementById('modal');
+    const modalTitle = document.getElementById('modalTitle');
+    const linkForm = document.getElementById('linkForm');
+    const titleInput = document.getElementById('title');
+    const urlInput = document.getElementById('url');
+    const descInput = document.getElementById('desc');
+    const tagsInput = document.getElementById('tags');
+    const categoryInput = document.getElementById('category');
+    const priorityInput = document.getElementById('priority');
+    const cancelBtn = document.getElementById('cancel');
+    const exportBtn = document.getElementById('exportBtn');
+    const importBtn = document.getElementById('importBtn');
+    const fileInput = document.getElementById('fileInput');
+
+    // 編集用ID
+    let editingId = null;
+
+    // 初期表示
+    render();
+    populateCategoryFilter();
+
+    // イベント
+    searchInput.addEventListener('input', render);
+    filterCategory.addEventListener('change', render);
+    addBtn.addEventListener('click', ()=>openModal());
+    cancelBtn.addEventListener('click', closeModal);
+    linkForm.addEventListener('submit', onSave);
+    exportBtn.addEventListener('click', onExport);
+    importBtn.addEventListener('click', ()=>fileInput.click());
+    fileInput.addEventListener('change', onImportFile);
+
+    // functions
+    function genId(){return 'id_' + Math.random().toString(36).slice(2,9)}
+
+    function loadLinks(){
+      try{
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if(!raw){
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultLinks));
+          return defaultLinks.slice();
+        }
+        return JSON.parse(raw);
+      }catch(e){console.error(e); localStorage.removeItem(STORAGE_KEY); return []}
+    }
+
+    function saveLinks(){
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(links));
+      populateCategoryFilter();
+    }
+
+    function openModal(link){
+      modal.style.display = 'flex';
+      if(link){
+        modalTitle.textContent = 'リンクを編集';
+        editingId = link.id;
+        titleInput.value = link.title || '';
+        urlInput.value = link.url || '';
+        descInput.value = link.desc || '';
+        tagsInput.value = (link.tags||[]).join(', ');
+        categoryInput.value = link.category || '';
+        priorityInput.value = link.priority || 0;
+      }else{
+        modalTitle.textContent = 'リンクを追加';
+        editingId = null;
+        linkForm.reset();
+      }
+    }
+
+    function closeModal(){
+      modal.style.display = 'none';
+      editingId = null;
+      linkForm.reset();
+    }
+
+    function onSave(e){
+      e.preventDefault();
+      const v = {
+        id: editingId || genId(),
+        title: titleInput.value.trim() || urlInput.value.trim(),
+        url: normalizeUrl(urlInput.value.trim()),
+        desc: descInput.value.trim(),
+        tags: tagsInput.value.split(',').map(t=>t.trim()).filter(Boolean),
+        category: categoryInput.value.trim(),
+        priority: Number(priorityInput.value),
+        created: Date.now()
+      };
+      if(!v.url){ alert('有効なURLを入力してください'); return }
+      if(editingId){
+        links = links.map(l=> l.id===editingId ? {...l,...v} : l);
+      }else{
+        links.push(v);
+      }
+      saveLinks();
+      closeModal();
+      render();
+    }
+
+    function normalizeUrl(u){
+      if(!u) return '';
+      if(/^https?:\/\//i.test(u)) return u;
+      return 'https://' + u;
+    }
+
+    function onExport(){
+      const blob = new Blob([JSON.stringify(links, null, 2)], {type:'application/json'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'links-export.json';
+      document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+    }
+
+    function onImportFile(e){
+      const f = e.target.files[0];
+      if(!f) return;
+      const reader = new FileReader();
+      reader.onload = ()=>{
+        try{
+          const data = JSON.parse(reader.result);
+          if(!Array.isArray(data)) throw new Error('不正な形式');
+          // 簡易バリデーション
+          links = data.map(item=>({
+            id: item.id || genId(),
+            title: item.title || item.url || '無名',
+            url: normalizeUrl(item.url || ''),
+            desc: item.desc || '',
+            tags: item.tags || [],
+            category: item.category || '',
+            priority: Number(item.priority) || 0,
+            created: item.created || Date.now()
+          }));
+          saveLinks();
+          render();
+          alert('インポート完了');
+        }catch(err){alert('インポートに失敗しました: ' + err.message)}
+      };
+      reader.readAsText(f);
+      fileInput.value = null;
+    }
+
+    function populateCategoryFilter(){
+      const cats = Array.from(new Set(links.map(l=>l.category).filter(Boolean))).sort();
+      filterCategory.innerHTML = '<option value="">全カテゴリ</option>' + cats.map(c=>`<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
+    }
+
+    function render(){
+      const q = (searchInput.value||'').toLowerCase().trim();
+      const cat = filterCategory.value;
+      let filtered = links.slice();
+      if(cat) filtered = filtered.filter(l=> (l.category||'') === cat);
+      if(q){
+        filtered = filtered.filter(l=> (
+          (l.title||'') + ' ' + (l.desc||'') + ' ' + (l.url||'') + ' ' + (l.tags||[]).join(' ')
+        ).toLowerCase().includes(q) );
+      }
+      // 優先度、高い順、作成日降順
+      filtered.sort((a,b)=> (b.priority - a.priority) || (b.created - a.created));
+
+      grid.innerHTML = '';
+      if(filtered.length===0){ empty.style.display='block'; } else { empty.style.display='none'; }
+
+      filtered.forEach(link=>{
+        const card = document.createElement('article'); card.className='card';
+        const title = document.createElement('h3');
+        const a = document.createElement('a'); a.href = link.url; a.target='_blank'; a.rel='noopener noreferrer'; a.textContent = link.title;
+        title.appendChild(a);
+        card.appendChild(title);
+        if(link.desc) { const d = document.createElement('div'); d.className='meta'; d.textContent = link.desc; card.appendChild(d); }
+        const meta = document.createElement('div'); meta.className='meta'; meta.textContent = link.url; card.appendChild(meta);
+
+        const tagsWrap = document.createElement('div'); tagsWrap.className='tags';
+        (link.tags||[]).forEach(t=>{
+          const sp = document.createElement('span'); sp.className='tag'; sp.textContent = t; tagsWrap.appendChild(sp);
+        });
+        if(link.category){ const sp = document.createElement('span'); sp.className='tag'; sp.textContent = link.category; tagsWrap.appendChild(sp); }
+        card.appendChild(tagsWrap);
+
+        const actions = document.createElement('div'); actions.className='card-actions';
+        const openBtn = document.createElement('button'); openBtn.className='small btn'; openBtn.textContent='開く'; openBtn.onclick = ()=> window.open(link.url,'_blank');
+        const copyBtn = document.createElement('button'); copyBtn.className='small btn secondary'; copyBtn.textContent='コピー'; copyBtn.onclick = ()=>{ navigator.clipboard.writeText(link.url).then(()=>alert('コピーしました')) };
+        const editBtn = document.createElement('button'); editBtn.className='small btn secondary'; editBtn.textContent='編集'; editBtn.onclick = ()=> openModal(link);
+        const delBtn = document.createElement('button'); delBtn.className='small btn secondary'; delBtn.textContent='削除'; delBtn.onclick = ()=>{ if(confirm('削除しますか？')){ links = links.filter(x=>x.id!==link.id); saveLinks(); render(); }};
+        actions.appendChild(openBtn); actions.appendChild(copyBtn); actions.appendChild(editBtn); actions.appendChild(delBtn);
+        card.appendChild(actions);
+
+        grid.appendChild(card);
+      });
+
+      count.textContent = ' ' + links.length + ' 件';
+    }
+
+    function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;" }[c])) }
+  </script>
+</body>
+</html>
