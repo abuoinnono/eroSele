@@ -2,173 +2,268 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>アダルトコンテンツ</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>アダルトコンテンツ (パスワード保護)</title>
   <style>
+    /* --- ページ共通スタイル（オリジナルを保持） --- */
+    :root{--bg1:#00a3af;--bg2:#006e7f;--text:#e6eef6;--muted:#cfd8e3}
+    html,body{height:100%;}
     body {
       margin: 0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto,
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto,
                    'Hiragino Kaku Gothic ProN', Meiryo, Arial;
-      color: #e6eef6;
-      background: linear-gradient(180deg, #00a3af 0%, #006e7f 100%);
+      color: var(--text);
+      background: linear-gradient(180deg, var(--bg1) 0%, var(--bg2) 100%);
       padding: 40px;
+      -webkit-font-smoothing:antialiased;
     }
-    h1 {
-      text-align: center;
-      margin-bottom: 8px; /* サブテキストとの間を調整 */
-    }
-    .sub-text {
-      text-align: center;
-      font-size: 14px;
-      color: #cfd8e3; /* 薄い文字色 */
-      margin-bottom: 32px; /* リンクカードとの間を空ける */
-    }
-    .links {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
-      max-width: 1000px;
-      margin: 0 auto;
-    }
-    .link-card {
-      background: rgba(255,255,255,0.1);
-      border-radius: 12px;
-      padding: 16px;
-      text-align: center;
-      transition: transform 0.2s, background 0.2s;
-    }
-    .link-card:hover {
-      background: rgba(255,255,255,0.2);
-      transform: translateY(-4px);
-    }
-    .link-card img {
-      width: 100%;
-      height: 140px;
-      object-fit: cover;
-      border-radius: 8px;
-      margin-bottom: 12px;
-      display: block;
-    }
-    .link-card a {
-      text-decoration: none;
-      color: #fff;
-      font-size: 18px;
-      font-weight: bold;
-      display: block;
-    }
-    .footer {
-      text-align: center;
-      font-size: 12px;
-      color: #cfd8e3;
-      margin-top: 40px;
-      padding-top: 20px;
-      border-top: 1px solid rgba(255,255,255,0.2);
-      }
 
+    h1 { text-align:center; margin-bottom:8px }
+    .sub-text { text-align:center; font-size:14px; color:var(--muted); margin-bottom:32px }
+    .links { display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:20px; max-width:1000px; margin:0 auto }
+    .link-card { background: rgba(255,255,255,0.1); border-radius:12px; padding:16px; text-align:center; transition: transform 0.2s, background 0.2s }
+    .link-card:hover { background: rgba(255,255,255,0.2); transform: translateY(-4px) }
+    .link-card img { width:100%; height:140px; object-fit:cover; border-radius:8px; margin-bottom:12px; display:block }
+    .link-card a { text-decoration:none; color:#fff; font-size:18px; font-weight:bold; display:block }
+    .footer { text-align:center; font-size:12px; color:var(--muted); margin-top:40px; padding-top:20px; border-top:1px solid rgba(255,255,255,0.2) }
+
+    /* --- パスワードオーバーレイ --- */
+    #pw-overlay{
+      position:fixed; inset:0; display:flex; align-items:center; justify-content:center; z-index:9999;
+      background: linear-gradient(rgba(0,0,0,0.88), rgba(0,0,0,0.88));
+      backdrop-filter: blur(3px);
+    }
+    #pw-box{
+      width:100%; max-width:420px; padding:24px; border-radius:12px; box-shadow:0 10px 30px rgba(0,0,0,0.5);
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02)); text-align:center; color:var(--text);
+    }
+    #pw-box h2{ margin:0 0 12px 0; font-size:20px }
+    #pw-input{ width:100%; padding:10px 12px; margin:8px 0; border-radius:8px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.02); color:var(--text) }
+    #pw-submit{ width:100%; padding:10px; margin-top:8px; border-radius:8px; border:none; cursor:pointer; font-weight:600 }
+    #pw-message{ margin-top:10px; font-size:13px; color:var(--muted) }
+    #pw-forgot{ margin-top:6px; display:block; font-size:12px; color:var(--muted); text-decoration:underline; cursor:default }
+
+    /* hide site content until unlocked */
+    #site-body[aria-hidden="true"]{ visibility:hidden; filter:blur(2px); user-select:none }
+
+    @media (max-width:480px){ body{ padding:20px } #pw-box{ padding:18px } }
   </style>
 </head>
 <body>
-  <h1>アダルトコンテンツリンク集</h1>
-  <p class="sub-text">動画ダウンロードパスワード "eroSele"</p>
 
-  <div class="links">
-
-    <div class="link-card">
-      <a href="https://geinoujam.com/archives/58628796.html" target="_blank">
-        <img src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Fgeinoujam.com%2Farchives%2F58628796.html?w=600" alt="涼森れむ">
-        【１】涼森れむ
-      </a>
-    </div>
-    <div class="link-card">
-      <a href="https://chaos-giga.com/archives/197012" target="_blank">
-        <img src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Fchaos-giga.com%2Farchives%2F197012?w=600" alt="中華系コスプレイヤー">
-        【２】中華系コスプレイヤー
-      </a>
-    </div>
-    <div class="link-card">
-      <a href="https://megane-ro.com/blockb2/" target="_blank">
-        <img src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Fmegane-ro.com%2Fblockb2%2F?w=600" alt="金髪美少女のブロック崩し">
-        【３】金髪美少女のブロック崩し
-      </a>
-    </div>
-    <div class="link-card">
-      <a href="https://moeimg.net/21299.html" target="_blank">
-        <img src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Fmoeimg.net%2F21299.html?w=600" alt="ひんめう">
-        【４】美乳
-      </a>
-    </div>
-    <div class="link-card">
-      <a href="https://pioncoo.net/articles/post-367498.html" target="_blank">
-        <img src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Fpioncoo.net%2Farticles%2Fpost-367498.html?w=600" alt="透けバトル">
-        【５】水着　透け
-      </a>
-    </div>
-    <div class="link-card">
-      <a href="https://www.okazurand.net/shady-jk-puts-her-boobs-on-the-desk/" target="_blank">
-        <img src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Fwww.okazurand.net%2Fshady-jk-puts-her-boobs-on-the-desk%2F?w=600" alt="重量">
-        【６】重量乳
-      </a>
-    </div>
-    <div class="link-card">
-      <a href="https://chaos-giga.com/archives/211880" target="_blank">
-        <img src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Fchaos-giga.com%2Farchives%2F211880?w=600" alt="揺れgood">
-        【７】揺れgood
-      </a>
-    </div>
-    <div class="link-card">
-      <a href="https://www.po-kaki-to.com/archives/30205.html" target="_blank">
-        <img src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Fwww.po-kaki-to.com%2Farchives%2F30205.html?w=600" alt="質感">
-        【８】質感
-      </a>
-    </div>
-    <div class="link-card">
-      <a href="https://www.i-one-net.com/item/1858" target="_blank">
-        <img src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Fwww.i-one-net.com%2Fitem%2F1858?w=600" alt="羞">
-        【９】水着・羞恥
-      </a>
-    </div>
-    <div class="link-card">
-      <a href="https://www.po-kaki-to.com/archives/34331.html" target="_blank">
-        <img src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Fwww.po-kaki-to.com%2Farchives%2F34331.html?w=600" alt="リマ">
-        【１０】ロリマン
-      </a>
-    </div>
-    <div class="link-card">
-      <a href="https://www.po-kaki-to.com/archives/33655.html" target="_blank">
-        <img src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Fwww.po-kaki-to.com%2Farchives%2F33655.html?w=600" alt="美巨">
-        【１１】美巨乳
-      </a>
-    </div>
-    <div class="link-card">
-      <a href="https://d.kuku.lu/6g87tgehp" target="_blank">
-        <img src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Fd.kuku.lu%2F6g87tgehp?w=600" alt="おっぱい">
-        【１２】おっぱい
-      </a>
-    </div>
-    <div class="link-card">
-      <a href="https://d.kuku.lu/xm83f6rhd" target="_blank">
-        <img src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Fd.kuku.lu%2Fxm83f6rhd?w=600" alt="メンヘラセックス動画">
-    　　【１３】メンヘラセックス動画
-      </a>
-    </div>
-    <div class="link-card">
-      <a href="https://d.kuku.lu/abzaws6tc" target="_blank">
-        <img src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Fd.kuku.lu%2Fabzaws6tc?w=600" alt="あまあま二次元彼女">
-        【１４】あまあま二次元彼女
-      </a>
-    </div>
-     <div class="link-card">
-       <a href="https://abuoinnono.github.io/erogazou/" target="_blank">
-         <img src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Fabuoinnono.github.io%2Ferogazou%2F?w=600" alt="画像紹介サイト">
-          【１５】エロ画像サイト
-          </a>
+  <!-- パスワードオーバーレイ -->
+  <div id="pw-overlay" role="dialog" aria-modal="true" aria-labelledby="pw-title">
+    <div id="pw-box">
+      <h2 id="pw-title">このページを表示するにはパスワードが必要です</h2>
+      <label for="pw-input" style="display:none">パスワード</label>
+      <input id="pw-input" type="password" inputmode="text" autocomplete="off" placeholder="パスワードを入力" aria-label="パスワード入力">
+      <button id="pw-submit" aria-label="パスワード送信">開く</button>
+      <div id="pw-message">パスワードがわからない場合は入力欄を閉じてください。</div>
+      <div id="pw-forgot" aria-hidden="true">※ 簡易保護です。ソースを確認すれば分かります。</div>
     </div>
   </div>
-  <footer class="footer">
-    © 2025 アダルトコンテンツリンク集
-  </footer>
+
+  <!-- サイト本体（認証が済むまで非表示） -->
+  <div id="site-body" aria-hidden="true">
+    <h1>アダルトコンテンツリンク集</h1>
+    <p class="sub-text">動画ダウンロードパスワード "eroSele"</p>
+
+    <div class="links">
+
+      <div class="link-card">
+        <a href="https://geinoujam.com/archives/58628796.html" target="_blank" rel="noopener noreferrer">
+          <img src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Fgeinoujam.com%2Farchives%2F58628796.html?w=600" alt="涼森れむ">
+          【１】涼森れむ
+        </a>
+      </div>
+      <div class="link-card">
+        <a href="https://chaos-giga.com/archives/197012" target="_blank" rel="noopener noreferrer">
+          <img src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Fchaos-giga.com%2Farchives%2F197012?w=600" alt="中華系コスプレイヤー">
+          【２】中華系コスプレイヤー
+        </a>
+      </div>
+      <div class="link-card">
+        <a href="https://megane-ro.com/blockb2/" target="_blank" rel="noopener noreferrer">
+          <img src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Fmegane-ro.com%2Fblockb2%2F?w=600" alt="金髪美少女のブロック崩し">
+          【３】金髪美少女のブロック崩し
+        </a>
+      </div>
+      <div class="link-card">
+        <a href="https://moeimg.net/21299.html" target="_blank" rel="noopener noreferrer">
+          <img src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Fmoeimg.net%2F21299.html?w=600" alt="ひんめう">
+          【４】美乳
+        </a>
+      </div>
+      <div class="link-card">
+        <a href="https://pioncoo.net/articles/post-367498.html" target="_blank" rel="noopener noreferrer">
+          <img src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Fpioncoo.net%2Farticles%2Fpost-367498.html?w=600" alt="透けバトル">
+          【５】水着　透け
+        </a>
+      </div>
+      <div class="link-card">
+        <a href="https://www.okazurand.net/shady-jk-puts-her-boobs-on-the-desk/" target="_blank" rel="noopener noreferrer">
+          <img src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Fwww.okazurand.net%2Fshady-jk-puts-her-boobs-on-the-desk%2F?w=600" alt="重量">
+          【６】重量乳
+        </a>
+      </div>
+      <div class="link-card">
+        <a href="https://chaos-giga.com/archives/211880" target="_blank" rel="noopener noreferrer">
+          <img src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Fchaos-giga.com%2Farchives%2F211880?w=600" alt="揺れgood">
+          【７】揺れgood
+        </a>
+      </div>
+      <div class="link-card">
+        <a href="https://www.po-kaki-to.com/archives/30205.html" target="_blank" rel="noopener noreferrer">
+          <img src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Fwww.po-kaki-to.com%2Farchives%2F30205.html?w=600" alt="質感">
+          【８】質感
+        </a>
+      </div>
+      <div class="link-card">
+        <a href="https://www.i-one-net.com/item/1858" target="_blank" rel="noopener noreferrer">
+          <img src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Fwww.i-one-net.com%2Fitem%2F1858?w=600" alt="羞">
+          【９】水着・羞恥
+        </a>
+      </div>
+      <div class="link-card">
+        <a href="https://www.po-kaki-to.com/archives/34331.html" target="_blank" rel="noopener noreferrer">
+          <img src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Fwww.po-kaki-to.com%2Farchives%2F34331.html?w=600" alt="リマ">
+          【１０】ロリマン
+        </a>
+      </div>
+      <div class="link-card">
+        <a href="https://www.po-kaki-to.com/archives/33655.html" target="_blank" rel="noopener noreferrer">
+          <img src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Fwww.po-kaki-to.com%2Farchives%2F33655.html?w=600" alt="美巨">
+          【１１】美巨乳
+        </a>
+      </div>
+      <div class="link-card">
+        <a href="https://d.kuku.lu/6g87tgehp" target="_blank" rel="noopener noreferrer">
+          <img src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Fd.kuku.lu%2F6g87tgehp?w=600" alt="おっぱい">
+          【１２】おっぱい
+        </a>
+      </div>
+      <div class="link-card">
+        <a href="https://d.kuku.lu/xm83f6rhd" target="_blank" rel="noopener noreferrer">
+          <img src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Fd.kuku.lu%2Fxm83f6rhd?w=600" alt="メンヘラセックス動画">
+    　　【１３】メンヘラセックス動画
+        </a>
+      </div>
+      <div class="link-card">
+        <a href="https://d.kuku.lu/abzaws6tc" target="_blank" rel="noopener noreferrer">
+          <img src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Fd.kuku.lu%2Fabzaws6tc?w=600" alt="あまあま二次元彼女">
+          【１４】あまあま二次元彼女
+        </a>
+      </div>
+       <div class="link-card">
+         <a href="https://abuoinnono.github.io/erogazou/" target="_blank" rel="noopener noreferrer">
+           <img src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Fabuoinnono.github.io%2Ferogazou%2F?w=600" alt="画像紹介サイト">
+            【１５】エロ画像サイト
+            </a>
+      </div>
+    </div>
+    <footer class="footer">© 2025 アダルトコンテンツリンク集</footer>
+  </div>
+
+  <script>
+    /*
+      クライアント側オーバーレイ式パスワード保護 (簡易)
+      - サーバ側の保護ではありません。開発者ツールでソースを見ればパスワードは確認可能です。
+      - パスワードはSHA-256で比較しており、平文をそのまま置くより少しだけマシです。
+      - パスワードの初期値は "eroSele" (ハッシュは下の PASSWORD_HASH に埋め込み済み)
+
+      変更方法:
+      - 新しい平文パスワードを使いたい場合は、ブラウザのコンソールで次の関数を実行してハッシュを生成し
+        その結果を PASSWORD_HASH に置き換えてください。
+
+      function digestHex(text){ return crypto.subtle.digest('SHA-256', new TextEncoder().encode(text)).then(b=>{
+        return Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,'0')).join('');
+      })}
+      digestHex('あなたの新しいパスワード').then(console.log)
+    */
+
+    (function(){
+      'use strict';
+
+      // --- 設定 ---
+      // 初期パスワード: "eroSele"
+      const PASSWORD_HASH = 'ba94616ed3e3c8b1c12ae4a5db0802b30ac21431d53d74c7fde2d29d4219d7e0';
+      const STORAGE_KEY = 'site_auth_ok_v1'; // バージョンを変えれば再認証させられます
+      const overlay = document.getElementById('pw-overlay');
+      const input = document.getElementById('pw-input');
+      const submit = document.getElementById('pw-submit');
+      const message = document.getElementById('pw-message');
+      const site = document.getElementById('site-body');
+
+      // 初期フォーカス
+      input.focus();
+
+      // 既に認証済みならオーバーレイを自動で閉じる
+      if(sessionStorage.getItem(STORAGE_KEY) === '1'){
+        unlock();
+      }
+
+      // イベント
+      submit.addEventListener('click', tryAuth);
+      input.addEventListener('keydown', function(e){ if(e.key === 'Enter') tryAuth(); });
+
+      async function tryAuth(){
+        const val = input.value || '';
+        if(!val){ showMsg('パスワードを入力してください'); return; }
+        showMsg('確認中…');
+        try{
+          const h = await digestHex(val);
+          if(timingSafeEqual(h, PASSWORD_HASH)){
+            sessionStorage.setItem(STORAGE_KEY, '1');
+            unlock();
+          } else {
+            input.value = '';
+            input.focus();
+            showMsg('パスワードが違います', true);
+          }
+        }catch(err){
+          console.error(err);
+          showMsg('エラーが発生しました');
+        }
+      }
+
+      function unlock(){
+        overlay.style.display = 'none';
+        site.setAttribute('aria-hidden','false');
+        site.style.visibility = 'visible';
+        site.style.filter = 'none';
+      }
+
+      function showMsg(text, isError){
+        message.textContent = text;
+        message.style.color = isError ? '#ffb4b4' : '';
+      }
+
+      // SHA-256 ハッシュを返す（hex）
+      function digestHex(text){
+        const enc = new TextEncoder();
+        return crypto.subtle.digest('SHA-256', enc.encode(text)).then(buf=>{
+          return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+        });
+      }
+
+      // タイミング攻撃を若干緩和する比較
+      function timingSafeEqual(a,b){
+        if(a.length !== b.length) return false;
+        let res = 0;
+        for(let i=0;i<a.length;i++) res |= a.charCodeAt(i) ^ b.charCodeAt(i);
+        return res === 0;
+      }
+
+      // アクセシビリティ: ESCでオーバーレイに戻らないように無効化はしない（意図的に残す）
+
+      // オーバーレイがフォーカスを奪うよう管理（タブのループトラップ）
+      document.addEventListener('focus', function(e){
+        if(overlay.style.display !== 'none' && !overlay.contains(e.target)){
+          e.stopPropagation(); overlay.focus();
+        }
+      }, true);
+
+    })();
+  </script>
 </body>
 </html>
-
-</body>
-</html>
-
